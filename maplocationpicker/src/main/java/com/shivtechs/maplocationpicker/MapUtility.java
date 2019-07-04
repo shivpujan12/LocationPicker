@@ -33,6 +33,10 @@ public class MapUtility {
     public static String apiKey = "";
     public static Location currentLocation = null;
     public static Dialog popupWindow;
+    public static String ADDRESS = "address";
+    public static String LATITUDE = "lat";
+    public static String LONGITUDE = "long";
+
 
     public static boolean isNetworkAvailable(Context context) {
         NetworkInfo activeNetworkInfo = null;

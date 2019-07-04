@@ -43,10 +43,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         if (requestCode == ADDRESS_PICKER_REQUEST) {
             try {
-                if (data != null && data.getStringExtra("address") != null) {
-                    String address = data.getStringExtra("address");
-                    double currentLatitude = data.getDoubleExtra("lat", 0.0);
-                    double currentLongitude = data.getDoubleExtra("long", 0.0);
+                if (data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
+                    String address = data.getStringExtra(MapUtility.ADDRESS);
+                    double currentLatitude = data.getDoubleExtra(MapUtility.LATITUDE, 0.0);
+                    double currentLongitude = data.getDoubleExtra(MapUtility.LONGITUDE, 0.0);
                     txtAddress.setText("Address: "+address);
                     txtLatLong.setText("Lat:"+currentLatitude+"  Long:"+currentLongitude);
 

@@ -117,7 +117,8 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         setContentView(R.layout.activity_location_picker);
-//        getSupportActionBar().hide();
+        if(getSupportActionBar()!=null)
+            getSupportActionBar().hide();
         ImageView imgCurrentloc = findViewById(R.id.imgCurrentloc);
         FloatingActionButton txtSelectLocation = findViewById(R.id.fab_select_location);
         imgSearch = findViewById(R.id.imgSearch);
@@ -167,16 +168,15 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
         // Try to obtain the map from the SupportMapFragment.
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        //if you want to open the location on the LocationPickerActivity through intent
         Intent i = getIntent();
         if (i != null) {
             Bundle extras = i.getExtras();
             if (extras != null) {
-                userAddress = extras.getString("address");
+                userAddress = extras.getString(MapUtility.ADDRESS);
                 //temp -> get lat , log from db
-                mLatitude = getIntent().getDoubleExtra("latitude", 0);
-                mLongitude = getIntent().getDoubleExtra("longitude", 0);
-
-
+                mLatitude = getIntent().getDoubleExtra(MapUtility.LATITUDE, 0);
+                mLongitude = getIntent().getDoubleExtra(MapUtility.LONGITUDE, 0);
             }
         }
 
@@ -217,11 +217,11 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                intent.putExtra("address", imgSearch.getText().toString().trim());
-                intent.putExtra("lat", mLatitude);
-                intent.putExtra("long", mLongitude);
-                intent.putExtra("id", place_id);
-                intent.putExtra("url", place_url);
+                intent.putExtra(MapUtility.ADDRESS, imgSearch.getText().toString().trim());
+                intent.putExtra(MapUtility.LATITUDE, mLatitude);
+                intent.putExtra(MapUtility.LONGITUDE, mLongitude);
+                intent.putExtra("id", place_id);//if you want place id
+                intent.putExtra("url", place_url);//if you want place url
                 LocationPickerActivity.this.setResult(Activity.RESULT_OK, intent);
                 LocationPickerActivity.this.finish();
             }
