@@ -125,9 +125,6 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
         ImageView directionTool = findViewById(R.id.direction_tool);
         ImageView googleMapTool = findViewById(R.id.google_maps_tool);
 
-        SharedPreferences sp = LocationPickerActivity.this.getSharedPreferences("key",MODE_PRIVATE);
-        Toast.makeText(this, sp.getString("value",null), Toast.LENGTH_SHORT).show();
-
         //intitalization of FusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -167,7 +164,6 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback);
             }
         };
-
 
         // Try to obtain the map from the SupportMapFragment.
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
