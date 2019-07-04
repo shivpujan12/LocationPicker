@@ -13,7 +13,7 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-package com.shivtechs.locationpickermodule;
+package com.shivtechs.maplocationpicker;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -30,6 +30,7 @@ import android.widget.Toast;
 public class MapUtility {
     public static final String MAP_URL = "https://maps.googleapis.com";
 
+    public static String apiKey = "";
     public static Location currentLocation = null;
     public static Dialog popupWindow;
 

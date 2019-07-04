@@ -12,13 +12,14 @@
 //  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package com.shivtechs.locationpickermodule;
+package com.shivtechs.maplocationpicker;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -108,7 +109,6 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     private double currentLongitude;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
-    private boolean requestingLocationUpdates;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,6 +125,8 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
         ImageView directionTool = findViewById(R.id.direction_tool);
         ImageView googleMapTool = findViewById(R.id.google_maps_tool);
 
+        SharedPreferences sp = LocationPickerActivity.this.getSharedPreferences("key",MODE_PRIVATE);
+        Toast.makeText(this, sp.getString("value",null), Toast.LENGTH_SHORT).show();
 
         //intitalization of FusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -191,7 +193,6 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
             currentLongitude = savedInstanceState.getDouble("currentLongitude");
         }
 
-
         if (!MapUtility.isNetworkAvailable(this)) {
             MapUtility.showToast(this, "Please Connect to Internet");
         }
@@ -201,7 +202,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
             @Override
             public void onClick(View view) {
                 if (!Places.isInitialized()) {
-                    Places.initialize(LocationPickerActivity.this.getApplicationContext(), LocationPickerActivity.this.getString(R.string.api_key));
+                    Places.initialize(LocationPickerActivity.this.getApplicationContext(),MapUtility.apiKey);
                 }
 
                 // Set the fields to specify which types of place data to return.
