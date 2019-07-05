@@ -16,7 +16,6 @@ Please follow below instruction to know how to use it in your project
 <div style="float:left">
 <img src="Screenshots/Screen1.png" width="200">
 <img src="Screenshots/Screen2.png" width="200">
-<img src="Screenshots/Screen3.png" width="200">
 </div>
 
 
