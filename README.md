@@ -37,7 +37,7 @@ step 1:
 step 2: Add the dependency
 ```gradle
   dependencies {
-	        implementation 'com.github.shivpujan12:LocationPicker:v1.1'
+	        implementation 'com.github.shivpujan12:LocationPicker:v1.2'
 	}
 ```
 <br/>
