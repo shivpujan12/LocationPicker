@@ -207,7 +207,6 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
                 // Start the autocomplete intent.
                 Intent intent = new Autocomplete.IntentBuilder(
                         AutocompleteActivityMode.FULLSCREEN, fields)
-                        .setLocationBias(RectangularBounds.newInstance(new LatLng(23.63936, 68.14712), new LatLng(28.20453, 97.34466)))
                         .build(LocationPickerActivity.this);
                 LocationPickerActivity.this.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
             }
