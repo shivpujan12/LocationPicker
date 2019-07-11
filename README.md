@@ -1,3 +1,5 @@
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-LocationPicker-brightgreen.svg?style=plastic)](https://android-arsenal.com/details/1/7761)
+
 <h1>Introduction</h1>
 LocationPicker is a simple and easy to use library that can be integrated into your project.
 The project is build with androidx.
