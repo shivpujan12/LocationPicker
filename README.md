@@ -147,7 +147,7 @@ For bugs, questions and discussions please use the Github Issues.
 If you like this library please put a star :star: to it
 <br/><br/>
 
-<h1>Reference</h1>
+<h1>Credits</h1>
 > The library is referenced from https://github.com/Intuz-production/AddressPicker-Android
 <br/>
 
