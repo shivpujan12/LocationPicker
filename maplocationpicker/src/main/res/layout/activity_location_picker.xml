@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -14,30 +16,124 @@
         android:id="@+id/imgSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="28dp"
+        android:layout_margin="10dp"
         android:background="@drawable/white_rounded_corner"
         android:drawableEnd="@drawable/ic_search_black_24dp"
-        android:drawableStart="@drawable/ic_place_red_800_24dp"
-        android:drawablePadding="8dp"
+        android:drawableStart="@drawable/ic_pointer"
+        android:drawablePadding="5dp"
         android:gravity="start|center_vertical"
         android:hint="Search Location"
-        android:maxLines="2"
-        android:paddingBottom="5dp"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
-        android:paddingTop="5dp"
-        android:textColor="@color/colorPrimary"
+        android:maxLines="1"
+        android:padding="5dp"
         android:textColorHint="@color/colorPrimary"
         android:textCursorDrawable="@null"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:drawableRight="@drawable/ic_search_black_24dp"
         android:drawableLeft="@drawable/ic_place_red_800_24dp" />
 
+
+
+
+    <ImageView
+        android:id="@+id/imgCurrentloc"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/imgSearch"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/white_rounded_corner"
+        android:padding="4dp"
+        app:srcCompat="@drawable/ic_my_location_black_24dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:contentDescription="Search Location" />
+
+
+    <LinearLayout
+        android:id="@+id/input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/white_rounded_corner"
+        android:padding="5dp"
+        android:layout_margin="6dp"
+        android:orientation="vertical"
+        >
+        <EditText
+            android:id="@+id/addressline1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/addressline1_hint"
+            android:textSize="16sp"
+            android:lines="5"
+            android:minLines="1"
+            android:inputType="textCapSentences|textMultiLine"
+            />
+        <EditText
+            android:id="@+id/addressline2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/citydetails"
+            android:hint="Enter location"
+            android:lines="3"
+            android:paddingTop="3dp"
+            android:minLines="1"
+            android:textSize="16sp"
+            android:inputType="textCapSentences|textMultiLine"
+            />
+
+        <TextView
+            android:id="@+id/citydetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="city pincode state"
+            android:paddingLeft="4dp"
+            android:textColor="@color/quantum_grey600"
+            android:textSize="16sp"
+            />
+        <Button
+            android:id="@+id/fab_select_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Continue"
+            android:textColor="@color/quantum_white_100"
+            android:background="@color/quantum_googgreen500"
+            >
+        </Button>
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/direction_tool"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_above="@+id/input_layout"
+        android:layout_marginBottom="4dp"
+        android:layout_toLeftOf="@+id/google_maps_tool"
+        android:layout_marginRight="5dp"
+        android:background="#9FFFFFFF"
+        android:padding="8dp"
+        app:srcCompat="@drawable/ic_directions_blue_24dp"
+        android:contentDescription="directions" />
+
+    <ImageView
+        android:id="@+id/google_maps_tool"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/input_layout"
+        android:layout_marginBottom="4dp"
+        android:background="#9FFFFFFF"
+        android:padding="8dp"
+        app:srcCompat="@drawable/ic_google_maps"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:contentDescription="google_map" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_select_location"
+        android:visibility="gone"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -47,55 +143,6 @@
         android:layout_alignParentStart="true"
         android:layout_marginLeft="8dp"
         android:layout_alignParentLeft="true" />
-
-
-    <ImageView
-        android:id="@+id/imgCurrentloc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imgSearch"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="18dp"
-        android:background="#9FFFFFFF"
-        android:padding="8dp"
-        app:srcCompat="@drawable/ic_my_location_black_24dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="18dp"
-        android:contentDescription="Search Location" />
-
-
-    <ImageView
-        android:id="@+id/direction_tool"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="102dp"
-        android:layout_marginBottom="18dp"
-        android:background="#9FFFFFFF"
-        android:padding="8dp"
-        app:srcCompat="@drawable/ic_directions_blue_24dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="102dp"
-        android:contentDescription="directions" />
-
-
-    <ImageView
-        android:id="@+id/google_maps_tool"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_alignStart="@+id/direction_tool"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="18dp"
-        android:background="#9FFFFFFF"
-        app:srcCompat="@drawable/ic_google_maps"
-        android:padding="8dp"
-        android:layout_alignLeft="@+id/direction_tool"
-        android:layout_marginLeft="40dp"
-        android:contentDescription="google_map" />
-
-
 
 
 </RelativeLayout>

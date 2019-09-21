@@ -7,5 +7,9 @@
         android:right="1dp"
         android:top="1dp" />
 
+    <stroke android:color="@color/quantum_black_divider"
+        android:width="3dp"
+        />
+
     <corners android:radius="3dp" />
 </shape>

@@ -7,20 +7,25 @@ The project is build with androidx.
 All libraries and APIs used in the project are up-to-date as of now
 You can get latitude,longitude and full address for selected location
 Please follow below instruction to know how to use it in your project
+<br/>
+<img src="Screenshots/screen.gif">
 
-<br/><br/>
+<br/>
 <h1>Features</h1>
 
 - Search any location using Google Places Library<br/>
 - Pick any location from the map<br/>
+- Edit Location and add more Details<br/>
+- Get location in a bundle with city , pincode , state etc <br/>
 - Open the picked location on Google Maps<br/>
 - Search the Direction to the picked location from current location (using Google Maps)<br/> 
 
 <div style="float:left">
-<img src="Screenshots/Screen1.png" width="200">
-<img src="Screenshots/Screen2.png" width="200">
+<img src="Screenshots/screen1.png" width="180">
+<img src="Screenshots/screen2.png" width="180">
+<img src="Screenshots/screen3.png" width="200">
+<img src="Screenshots/screen4.png" width="200">
 </div>
-
 
 <br/><br/>
 
@@ -109,22 +114,40 @@ inside `<application>` tag add `<meta-data>` as shown below
 5) Handle your onActivityResult for getting address, latitude and longitude as:
 
 ```java
-     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADDRESS_PICKER_REQUEST) {
-            try {
-                if (data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
-                    String address = data.getStringExtra(MapUtility.ADDRESS);
-                    double selectedLatitude = data.getDoubleExtra(MapUtility.LATITUDE, 0.0);
-                    double selectedLongitude = data.getDoubleExtra(MapUtility.LONGITUDE, 0.0);
-                    txtAddress.setText("Address: "+address);
-                    txtLatLong.setText("Lat:"+selectedLatitude+"  Long:"+selectedLongitude);
+      @Override
+        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            if (requestCode == ADDRESS_PICKER_REQUEST) {
+                try {
+                    if (data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
+                        // String address = data.getStringExtra(MapUtility.ADDRESS);
+                        double currentLatitude = data.getDoubleExtra(MapUtility.LATITUDE, 0.0);
+                        double currentLongitude = data.getDoubleExtra(MapUtility.LONGITUDE, 0.0);
+                        Bundle completeAddress =data.getBundleExtra("fullAddress");
+                    /* data in completeAddress bundle
+                    "fulladdress"
+                    "city"
+                    "state"
+                    "postalcode"
+                    "country"
+                    "addressline1"
+                    "addressline2"
+                     */
+                        txtAddress.setText(new StringBuilder().append("addressline2: ").append
+                                (completeAddress.getString("addressline2")).append("\ncity: ").append
+                                (completeAddress.getString("city")).append("\npostalcode: ").append
+                                (completeAddress.getString("postalcode")).append("\nstate: ").append
+                                (completeAddress.getString("state")).toString());
+
+                        txtLatLong.setText(new StringBuilder().append("Lat:").append(currentLatitude).append
+                                ("  Long:").append(currentLongitude).toString());
+
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
             }
-        }
     }
     
 ```

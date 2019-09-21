@@ -44,11 +44,28 @@ public class MainActivity extends Activity implements View.OnClickListener {
         if (requestCode == ADDRESS_PICKER_REQUEST) {
             try {
                 if (data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
-                    String address = data.getStringExtra(MapUtility.ADDRESS);
+                   // String address = data.getStringExtra(MapUtility.ADDRESS);
                     double currentLatitude = data.getDoubleExtra(MapUtility.LATITUDE, 0.0);
                     double currentLongitude = data.getDoubleExtra(MapUtility.LONGITUDE, 0.0);
-                    txtAddress.setText("Address: "+address);
-                    txtLatLong.setText("Lat:"+currentLatitude+"  Long:"+currentLongitude);
+                    Bundle completeAddress =data.getBundleExtra("fullAddress");
+                    /* data in completeAddress bundle
+                    "fulladdress"
+                    "city"
+                    "state"
+                    "postalcode"
+                    "country"
+                    "addressline1"
+                    "addressline2"
+                     */
+
+                    txtAddress.setText(new StringBuilder().append("addressline2: ").append
+                            (completeAddress.getString("addressline2")).append("\ncity: ").append
+                            (completeAddress.getString("city")).append("\npostalcode: ").append
+                            (completeAddress.getString("postalcode")).append("\nstate: ").append
+                            (completeAddress.getString("state")).toString());
+
+                    txtLatLong.setText(new StringBuilder().append("Lat:").append(currentLatitude).append
+                            ("  Long:").append(currentLongitude).toString());
 
                 }
             } catch (Exception ex) {

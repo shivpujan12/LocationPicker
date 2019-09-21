@@ -20,6 +20,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -31,6 +33,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,11 +73,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -88,6 +90,14 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     private static final int REQUEST_CHECK_SETTINGS = 2;
     private final String TAG = LocationPickerActivity.class.getSimpleName();
     private String userAddress = "";
+    private String userState = "";
+    private String userCity = "";
+    private String userPostalCode = "";
+    private String userCountry = "";
+    private String userAddressline2 = "";
+    private String userAddressline1 = "";
+    private Bundle addressBundle;
+    private List addressdetails;
     private double mLatitude;
     private double mLongitude;
     private String place_id = "";
@@ -96,7 +106,14 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 2;
     private boolean mLocationPermissionGranted;
     private TextView imgSearch;
+    private TextView citydetail;
+    private EditText addressline1;
+    private EditText addressline2;
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+
+    //inital zoom
+    private float previousZoomLevel = -1.0f;
+    private boolean isZooming = false;
 
     //Declaration of FusedLocationProviderClient
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -120,10 +137,17 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
         if(getSupportActionBar()!=null)
             getSupportActionBar().hide();
         ImageView imgCurrentloc = findViewById(R.id.imgCurrentloc);
-        FloatingActionButton txtSelectLocation = findViewById(R.id.fab_select_location);
-        imgSearch = findViewById(R.id.imgSearch);
+        Button txtSelectLocation = findViewById(R.id.fab_select_location);
         ImageView directionTool = findViewById(R.id.direction_tool);
         ImageView googleMapTool = findViewById(R.id.google_maps_tool);
+
+        imgSearch = findViewById(R.id.imgSearch);
+        addressline2 = findViewById(R.id.addressline2);
+        citydetail = findViewById(R.id.citydetails);
+
+
+        // Initialize bundle
+        addressBundle = new Bundle();
 
         //intitalization of FusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -162,7 +186,9 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
 
                 //Location fetched, update listener can be removed
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+
             }
+
         };
 
         // Try to obtain the map from the SupportMapFragment.
@@ -216,9 +242,11 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
+                // add data into intent and send back to Parent Activity
                 intent.putExtra(MapUtility.ADDRESS, imgSearch.getText().toString().trim());
                 intent.putExtra(MapUtility.LATITUDE, mLatitude);
                 intent.putExtra(MapUtility.LONGITUDE, mLongitude);
+                intent.putExtra("fullAddress",addressBundle);
                 intent.putExtra("id", place_id);//if you want place id
                 intent.putExtra("url", place_url);//if you want place url
                 LocationPickerActivity.this.setResult(Activity.RESULT_OK, intent);
@@ -235,6 +263,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
             }
         });
 
+        // google maps tools
         directionTool.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -254,7 +283,15 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
             }
         });
 
+        try {
+            Toast.makeText(getApplicationContext(),this.getResources().getString(R.string.edittext_hint),Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            Toast.makeText(this,this.getResources().getString(R.string.edittext_hint),Toast.LENGTH_SHORT).show();
+
+        }
+
     }
+
 
     @Override
     protected void onPause() {
@@ -270,6 +307,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 userAddress = place.getAddress();
+              //  addressdetails=place.getAddressComponents();
                 imgSearch.setText("" + userAddress);
                 mLatitude = place.getLatLng().latitude;
                 mLongitude = place.getLatLng().longitude;
@@ -369,27 +407,53 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
         }
 
     }
-
+    public Bitmap resizeMapIcons(String iconName, int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
+    }
     private void addMarker() {
-
+        CameraUpdate cameraUpdate;
+        String SPACE = " , ";
         LatLng coordinate = new LatLng(mLatitude, mLongitude);
         if (mMap != null) {
             MarkerOptions markerOptions;
             try {
                 mMap.clear();
                 imgSearch.setText("" + userAddress);
+                markerOptions = new MarkerOptions().position(coordinate).title(userAddress).icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("ic_pointer",100,100)));
+                if(isZooming) {
+                   //  camera will not Update
+                    cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, mMap.getCameraPosition().zoom);
+                }else {
+                    // camera will Update zoom
+                    cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 18);
 
-                markerOptions = new MarkerOptions().position(coordinate).title(userAddress).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_red_800_24dp));
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 14);
+
+                }
+
                 mMap.animateCamera(cameraUpdate);
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
                 Marker marker = mMap.addMarker(markerOptions);
-                marker.showInfoWindow();
+                //marker.showInfoWindow();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
+        try{
+            userAddressline2 = userAddressline2.substring(0, userAddressline2.indexOf(userCity));
+           // userAddressline.replace(userCity,"");
+          //  userAddressline.replace(userPostalCode,"");
+         //   userAddressline.replace(userState,"");
+          //  userAddressline.replace(userCountry,"");
+        }catch (Exception ex){ Log.d(TAG,"address error "+ex);}
+
+        try {
+            addressline2.setText(userAddressline2);
+            citydetail.setText(userCity+SPACE+userPostalCode+SPACE+userState+SPACE+userCountry);
+
+        }catch (Exception ex){ ex.printStackTrace();}
 
     }
 
@@ -438,6 +502,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
                 mLatitude = latLng.latitude;
                 mLongitude = latLng.longitude;
                 Log.e("latlng", latLng + "");
+                isZooming=true;
                 LocationPickerActivity.this.addMarker();
                 if (!MapUtility.isNetworkAvailable(LocationPickerActivity.this)) {
                     MapUtility.showToast(LocationPickerActivity.this, "Please Connect to Internet");
@@ -563,6 +628,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
         outState.putDouble("latitude", mLatitude);
         outState.putDouble("longitude", mLongitude);
         outState.putString("userAddress", userAddress);
+        outState.putBundle("addressBundle",addressBundle);
         outState.putDouble("currentLatitude", currentLatitude);
         outState.putDouble("currentLongitude", currentLongitude);
     }
@@ -629,9 +695,8 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class GetAddressFromLatLng extends AsyncTask<Double, Void, String> {
+    private class GetAddressFromLatLng extends AsyncTask<Double, Void, Bundle> {
         Double latitude, longitude;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -639,12 +704,11 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
         }
 
         @Override
-        protected String doInBackground(Double... doubles) {
+        protected Bundle doInBackground(Double... doubles) {
             try {
 
                 latitude = doubles[0];
                 longitude = doubles[1];
-
                 Geocoder geocoder;
                 List<Address> addresses;
                 geocoder = new Geocoder(LocationPickerActivity.this, Locale.getDefault());
@@ -657,38 +721,62 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
 
                     String address = addresses.get(0).getAddressLine(0);
                     if (address != null)
+                        addressBundle.putString("addressline2",address);
                         sb.append(address).append(" ");
+
+
                     String city = addresses.get(0).getLocality();
                     if (city != null)
+                        addressBundle.putString("city",city);
                         sb.append(city).append(" ");
+
 
                     String state = addresses.get(0).getAdminArea();
                     if (state != null)
+                        addressBundle.putString("state",state);
                         sb.append(state).append(" ");
+
+
                     String country = addresses.get(0).getCountryName();
                     if (country != null)
+                        addressBundle.putString("country",country);
                         sb.append(country).append(" ");
 
                     String postalCode = addresses.get(0).getPostalCode();
                     if (postalCode != null)
+                        addressBundle.putString("postalcode",postalCode);
                         sb.append(postalCode).append(" ");
-                    return sb.toString();
+                   // return sb.toString();
 
+                    addressBundle.putString("fulladdress",sb.toString());
+
+                    return addressBundle;
                 } else {
                     return null;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                return roundAvoid(latitude) + "," + roundAvoid(longitude);
+                addressBundle.putBoolean("error",true);
+                return addressBundle;
+                //return roundAvoid(latitude) + "," + roundAvoid(longitude);
 
             }
+
+           // return bu;
         }
 
 
         @Override
-        protected void onPostExecute(String userAddress) {
+        // setting address into different components
+        protected void onPostExecute(Bundle userAddress) {
             super.onPostExecute(userAddress);
-            LocationPickerActivity.this.userAddress = userAddress;
+
+            LocationPickerActivity.this.userAddress = userAddress.getString("fulladdress");
+            LocationPickerActivity.this.userCity = userAddress.getString("city");
+            LocationPickerActivity.this.userState = userAddress.getString("state");
+            LocationPickerActivity.this.userPostalCode = userAddress.getString("postalcode");
+            LocationPickerActivity.this.userCountry = userAddress.getString("country");
+            LocationPickerActivity.this.userAddressline2 = userAddress.getString("addressline2");
             MapUtility.hideProgress();
             addMarker();
         }
