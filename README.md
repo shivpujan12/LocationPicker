@@ -21,8 +21,8 @@ Please follow below instruction to know how to use it in your project
 - Search the Direction to the picked location from current location (using Google Maps)<br/> 
 
 <div style="float:left">
-<img src="Screenshots/screen1.png" width="180">
-<img src="Screenshots/screen2.png" width="180">
+<img src="Screenshots/Screen1.png" width="180">
+<img src="Screenshots/Screen2.png" width="180">
 <img src="Screenshots/screen3.png" width="200">
 <img src="Screenshots/screen4.png" width="200">
 </div>
