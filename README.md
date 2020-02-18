@@ -153,8 +153,8 @@ If you like this library please put a star :star: to it
 <br/>
 
 <h1>Connect with me!</h1>
-<a href="https://twitter.com/Shivpujan120899">
-<img src="https://img.shields.io/badge/Twitter-@Shivpujan120899-blue.svg" alt="TwitterLink"><br>
-<a href="https://www.linkedin.com/in/shivpujan-yadav-b98485142">
-<img src="https://img.shields.io/badge/Linked_In-Shivpujan_Yadav-blue.svg" alt="LinkedInLink">
+<a href="https://www.linkedin.com/in/asad-ali-choudhry">
+<img src="https://img.shields.io/badge/Linked_In-Asad_Ali_Choudhry-blue.svg" alt="LinkedInLink"><br>
+<a href="https://handyopinion.com/author/asad175/">
+<img src="https://img.shields.io/badge/Website-Asad_Ali_Choudhry-blue.svg" alt="Website Link">
 <br/><br/>
