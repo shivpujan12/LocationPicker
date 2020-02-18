@@ -135,6 +135,7 @@ To open the LocationPicker with pre-selected location, just add extras to the In
 
 ```java
       Intent intent = new Intent(EditorActivity.this, LocationPickerActivity.class);
+      intent.putExtra(MapUtility.COUNTRY_ISO_CODE, "US"); // Only show US locations
       intent.putExtra(MapUtility.ADDRESS,address);
       intent.putExtra(MapUtility.LATITUDE, latitude);
       intent.putExtra(MapUtility.LONGITUDE, longitude);
