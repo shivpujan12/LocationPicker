@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">LocationPickerModule</string>
     <string name="show_location_picker">Show Location Picker</string>
-    <string name="api_key">your_api_key</string>
+    <string name="api_key">api key</string>
 </resources>
