@@ -100,6 +100,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     private List addressdetails;
     private double mLatitude;
     private double mLongitude;
+    private String userCountryISOCode = null;
     private String place_id = "";
     private String place_url = " ";
     private GoogleMap mMap;
@@ -203,6 +204,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
                 //temp -> get lat , log from db
                 mLatitude = getIntent().getDoubleExtra(MapUtility.LATITUDE, 0);
                 mLongitude = getIntent().getDoubleExtra(MapUtility.LONGITUDE, 0);
+                userCountryISOCode = extras.getString(MapUtility.COUNTRY_ISO_CODE, null);
             }
         }
 
@@ -212,6 +214,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
             userAddress = savedInstanceState.getString("userAddress");
             currentLatitude = savedInstanceState.getDouble("currentLatitude");
             currentLongitude = savedInstanceState.getDouble("currentLongitude");
+            userCountryISOCode = savedInstanceState.getString("userCountryISOCode", null);
         }
 
         if (!MapUtility.isNetworkAvailable(this)) {
@@ -233,6 +236,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
                 // Start the autocomplete intent.
                 Intent intent = new Autocomplete.IntentBuilder(
                         AutocompleteActivityMode.FULLSCREEN, fields)
+                        .setCountry(userCountryISOCode)
                         .build(LocationPickerActivity.this);
                 LocationPickerActivity.this.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
             }
@@ -631,6 +635,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
         outState.putBundle("addressBundle",addressBundle);
         outState.putDouble("currentLatitude", currentLatitude);
         outState.putDouble("currentLongitude", currentLongitude);
+        outState.putString("userCountryISOCode", userCountryISOCode);
     }
 
     @Override

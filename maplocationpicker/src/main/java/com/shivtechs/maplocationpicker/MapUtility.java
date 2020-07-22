@@ -36,6 +36,10 @@ public class MapUtility {
     public static String ADDRESS = "address";
     public static String LATITUDE = "lat";
     public static String LONGITUDE = "long";
+    /**
+     * Two Letters county ISO code like PK, US, AU, AE etc
+     */
+    public static String COUNTRY_ISO_CODE = "";
 
 
     public static boolean isNetworkAvailable(Context context) {
